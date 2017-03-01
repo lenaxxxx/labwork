@@ -1,0 +1,73 @@
+---
+title: "EEB177-exercise8"
+author: "Linna Sun"
+date: "March 1, 2017"
+output: html_document
+---
+
+## Exploring the Cocoli Dataset
+
+```{r}
+cocoli_data <- read.table("~/Desktop/eeb-177/class-assignments/week-7-file/cocoli.txt", header = TRUE)
+head(cocoli_data)
+str(cocoli_data)
+
+View(cocoli_data)
+
+cocoli_data$dbh1
+
+sizes_in_1994 <- cocoli_data$dbh1
+names(sizes_in_1994)<- cocoli_data$tag
+sizes_in_1994[1] #subset a vector by position
+sizes_in_1994["000001"] #subset a vector by name
+
+sizes_in_1997 <- cocoli_data$dbh2
+names(sizes_in_1997)<- cocoli_data$tag
+
+sizes_in_1998 <- cocoli_data$dbh3
+names(sizes_in_1998)<- cocoli_data$tag
+
+# fing all instances of dbh = 171
+sizes_in_1994 == 171
+
+# we want to know the fate of all trees that began 1994 with dbh 171
+# first, make a list of trees that we 171 dbh in 1994:
+trees_171_1994 = which(sizes_in_1994 == 171)
+trees_171_1994
+
+# in the 1997 list, find these individuals that used to be 171mm
+
+sizes_in_1997[trees_171_1994]
+
+## Calculate RGR between 1997-1994
+# (size in 1997 - size in 1994)/size in 1994
+yearly_RGR_1 = ((cocoli_data$dbh2 - cocoli_data$dbh1)/cocoli_data$dbh1)/3
+
+# add the RGR column
+cocoli_data$rgr1 = yearly_RGR_1
+
+View(cocoli_data)
+```
+
+## Plots
+
+```{r}
+# make histograms with hist()
+# barplots with barplot()
+# boxplots with boxplot()
+# scatter plot with plot()
+
+
+hist(cocoli_data$dbh1, xlab = "DBH in 1994(mm)", main = "Distributions of sized in 1994", col = "red", xlim = c(0, 2000))
+# cannot use log = "y" because we have negative values in the data
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(cocoli_data) + geom_histogram(aes(dbh1), fill = "blue", alpha = .2) + 
+  geom_histogram(aes(dbh2), fill = "red", alpha = .2) + 
+  ggtitle("Distribution of sizes in 1994")
+
+```
+
